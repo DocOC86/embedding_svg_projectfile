@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/svg_embedder" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
