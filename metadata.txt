@@ -12,7 +12,7 @@ email=info@datenbankgesellschaft.de
 
 about=SVG embedder, embedding SVG into the QGIS Projectfile. The Projectfile can be opened from another QGIS, without installing the used SVG's.
 
-tracker=http://bugs
+# tracker=http://bugs
 repository=https://github.com/DocOC86/embedding_svg_projectfile
 # End of mandatory metadata
 
@@ -20,14 +20,13 @@ repository=https://github.com/DocOC86/embedding_svg_projectfile
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=
-Version 0.2: saving projectfiles everywhere you want
-Version 0.1: embedding of svg's into projectfile
+changelog=  Version 0.2: saving projectfiles everywhere you want
+            Version 0.1: embedding of svg's into projectfile
 
 # Tags are comma separated with spaces allowed
 tags=python, SVG, embedding, base64
 
-homepage=http://homepage
+homepage=https://github.com/DocOC86/embedding_svg_projectfile
 category=Plugins
 icon=icon.png
 # experimental flag
