@@ -6,7 +6,7 @@
 name=SVG Embeddor
 qgisMinimumVersion=3.0
 description=embedding SVG into Projectfiles
-version=0.1
+version=0.2
 author=d.b.g. Datenbankgesellschaft (Rick Brüning)
 email=info@datenbankgesellschaft.de
 
@@ -20,7 +20,9 @@ repository=https://github.com/DocOC86/embedding_svg_projectfile
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=
+Version 0.2: saving projectfiles everywhere you want
+Version 0.1: embedding of svg's into projectfile
 
 # Tags are comma separated with spaces allowed
 tags=python, SVG, embedding, base64

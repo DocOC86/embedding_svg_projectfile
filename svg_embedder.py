@@ -209,6 +209,38 @@ class embedded_svg:
                 tree = ET.parse(datafile)
                 root = tree.getroot()
 
+                # search for layers
+                for symbol in root.iter("layer-tree-layer"):
+                    sym_att = symbol.attrib
+                    text = json.dumps(str(sym_att), ensure_ascii=False).encode('utf-8')
+                    print(text, "symbolattribute")
+                    try:
+
+                        if b".shp" not in text:
+                            continue
+
+                        else:
+
+                            test = text.decode().split("'")
+                            matching = [s for s in test if ".shp" in s]
+                            layer_paths = [layer.source() for layer in QgsProject.instance().mapLayers().values()]
+
+                            for layer in layer_paths:
+                                test = matching[0].split("/")
+
+                                if test[-1] in layer:
+                                    symbol.set("source", layer)
+
+                                for symbol2 in root.iter("datasource"):
+
+                                    if test[-1] in symbol2.text and test[-1] in layer:
+                                        symbol2.text = layer
+
+                    except Exception as e:
+                        QgsMessageLog.logMessage(" search fail: " + str(e), 'embedded SVG', 0)
+
+
+
                 # search for svg filenames
                 for symbol in root.iter("prop"):
                     sym_att = symbol.attrib
