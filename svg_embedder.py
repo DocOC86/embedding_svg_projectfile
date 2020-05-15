@@ -193,7 +193,6 @@ class embedded_svg:
         qgz_path = QgsProject.instance().fileName()
 
         filename = QFileDialog.getSaveFileName(QFileDialog(), "Save Folder", qgz_path, 'QGZ files (*.qgz)')
-        print(filename,filename[0])
         # temporary folder
         temp_path = tempfile.gettempdir()
         QgsMessageLog.logMessage("Start", 'embedded SVG', 0)
@@ -213,7 +212,6 @@ class embedded_svg:
                 for symbol in root.iter("layer-tree-layer"):
                     sym_att = symbol.attrib
                     text = json.dumps(str(sym_att), ensure_ascii=False).encode('utf-8')
-                    print(text, "symbolattribute")
                     try:
 
                         if b".shp" not in text:

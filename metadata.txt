@@ -10,7 +10,7 @@ version=0.2
 author=d.b.g. Datenbankgesellschaft (Rick Brüning)
 email=info@datenbankgesellschaft.de
 
-about=SVG embedder, embedding SVG into the QGIS Projectfile. The Projectfile can be opened from another QGIS, without installing the used SVG's.
+about=SVG embedder, embedding SVG into the QGIS Projectfile. Can import several SVG style files within two clicks. The Projectfile can be opened from another QGIS, without installing the used SVG's. 
 
 # tracker=http://bugs
 repository=https://github.com/DocOC86/embedding_svg_projectfile
