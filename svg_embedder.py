@@ -191,8 +191,8 @@ class embedded_svg:
         """Run method that performs all the real work"""
         # project folder
         qgz_path = QgsProject.instance().fileName()
-
         filename = QFileDialog.getSaveFileName(QFileDialog(), "Save Folder", qgz_path, 'QGZ files (*.qgz)')
+
         # temporary folder
         temp_path = tempfile.gettempdir()
         QgsMessageLog.logMessage("Start", 'embedded SVG', 0)
@@ -203,7 +203,6 @@ class embedded_svg:
                     if f.filename.endswith('.qgs'):
                         in_qgz.extract(f.filename, temp_path)
                         datafile = temp_path + "\\" + f.filename
-
             with open(datafile, 'r') as f:
                 tree = ET.parse(datafile)
                 root = tree.getroot()
@@ -214,32 +213,64 @@ class embedded_svg:
                     text = json.dumps(str(sym_att), ensure_ascii=False).encode('utf-8')
                     try:
 
-                        if b".shp" not in text:
-                            continue
-
-                        else:
+                        if b".shp" in text:
 
                             test = text.decode().split("'")
                             matching = [s for s in test if ".shp" in s]
-                            layer_paths = [layer.source() for layer in QgsProject.instance().mapLayers().values()]
+                            # matching_raster = [s for s in test if ".tif" in s]
 
+                            layer_paths = [layer.source() for layer in QgsProject.instance().mapLayers().values()]
                             for layer in layer_paths:
                                 test = matching[0].split("/")
-
+                                # test_raster = matching_raster[0].split("\\")
                                 if test[-1] in layer:
                                     symbol.set("source", layer)
+
 
                                 for symbol2 in root.iter("datasource"):
 
                                     if test[-1] in symbol2.text and test[-1] in layer:
                                         symbol2.text = layer
 
+                        else:
+                            continue
                     except Exception as e:
                         QgsMessageLog.logMessage(" search fail: " + str(e), 'embedded SVG', 0)
 
 
 
                 # search for svg filenames
+                for symbol in root.iter("Option"):
+                    sym_att = symbol.attrib
+                    text = json.dumps(str(sym_att), ensure_ascii=False).encode('utf-8')
+
+                    try:
+                        if b".svg" not in text:
+
+                            continue
+                        else:
+
+                            test = text.decode().split("'")
+                            matching = [s for s in test if ".svg" in s]
+
+                            # SVG Ordner des Alkis Plugins
+                            svg_folder = QgsSymbolLayerUtils.listSvgFiles()
+
+                            # search for svg name in svg folder
+                            for svg_pic in svg_folder:
+
+                                if matching[0] in svg_pic:
+                                    image = open(svg_pic, 'r')
+
+                            # encode svg file to base64 and write into qgs
+                            image_read = str(image.read())
+                            image_64_encode = base64.b64encode(image_read.encode("utf-8"))
+                            image_64_encode_str = str(image_64_encode, "utf-8")
+                            encoded_svg = "base64:" + image_64_encode_str
+                            symbol.set("value", encoded_svg)
+                    except Exception as e:
+                        QgsMessageLog.logMessage("option search fail: " + str(e), 'embedded SVG', 0)
+
                 for symbol in root.iter("prop"):
                     sym_att = symbol.attrib
                     text = json.dumps(str(sym_att), ensure_ascii=False).encode('utf-8')
@@ -270,18 +301,18 @@ class embedded_svg:
                             encoded_svg = "base64:" + image_64_encode_str
                             symbol.set("v", encoded_svg)
                     except Exception as e:
-                        QgsMessageLog.logMessage(" search fail: " + str(e), 'embedded SVG', 0)
+                        QgsMessageLog.logMessage("prop search fail: " + str(e), 'embedded SVG', 0)
 
             tree.write(datafile)
+            print(datafile[:-4]+" datafile")
             file_paths = []
             # new zipfile for new qgs file
             with ZipFile(filename[0][:-4] + ".qgz", 'w') as zip:
 
-            # with ZipFile(qgz_path[:-4] + "_svg_embedded.qgz", 'w') as zip:
-                zip.write(datafile, basename(datafile))
+                zip.write(datafile, basename(filename[0][:-4] +".qgs"))
 
             os.remove(datafile)
 
             QgsMessageLog.logMessage("Finish", 'embedded SVG', 0)
         except Exception as e:
-            QgsMessageLog.logMessage(" search fail: " + str(e), 'embedded SVG', 0)
+            QgsMessageLog.logMessage("complete search fail: " + str(e), 'embedded SVG', 0)
